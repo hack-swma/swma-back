@@ -1,5 +1,5 @@
 package com.swma.swma.domain.user.entity.type;
 
-public enum Language {
+public enum LanguageType {
 	CHINESE, JAPANESE, KOREAN, ENGLISH, FRENCH, GERMAN;
 }
