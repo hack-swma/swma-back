@@ -19,7 +19,8 @@ public class User {
     private int year;
     private int month;
     private int day;
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
     private int period;
     private String region;
     private String img;
