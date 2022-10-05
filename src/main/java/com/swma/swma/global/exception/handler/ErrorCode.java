@@ -12,6 +12,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
 	USER_ALREADY_EXIST(409,"유저가 이미 존재합니다.");
 
+	USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
 	private final int status;
 	private final String message;
 

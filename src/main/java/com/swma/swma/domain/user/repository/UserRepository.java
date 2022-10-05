@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User,Long> {
     Optional<User> findUserByUserId(String userId);
+	Page<User> findAllByOrderByIdDesc(Pageable page);
     Boolean existsUserByUserId(String userId);
 }
