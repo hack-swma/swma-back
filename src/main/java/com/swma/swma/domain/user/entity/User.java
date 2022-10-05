@@ -26,7 +26,7 @@ public class User {
     @Column(length = 60, nullable = false)
     private String password;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 20) // nullable = false로 변경
     private String name;
 
     private int year;
@@ -36,10 +36,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Sex sex;
 
-    @Column(nullable = false)
+    @Column() // nullable = false로 변경
     private String img;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = 500) // nullable = false로 변경
     private String description;
 
     @Enumerated(EnumType.STRING)

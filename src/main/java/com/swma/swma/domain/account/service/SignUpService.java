@@ -1,5 +1,6 @@
 package com.swma.swma.domain.account.service;
 
+import com.swma.swma.domain.account.exception.UserAlreadyExistException;
 import com.swma.swma.domain.account.presentation.dto.request.SignUpRequest;
 import com.swma.swma.domain.account.presentation.dto.response.TokenResponse;
 import com.swma.swma.domain.user.entity.User;
@@ -17,11 +18,14 @@ public class SignUpService {
 
     @Transactional
     public TokenResponse execute(SignUpRequest authenticationRequest){
+        if(userRepository.existsUserByUserId(authenticationRequest.getId())) throw new UserAlreadyExistException();
+        TokenResponse tokenData = generatedTokenService.execute(authenticationRequest.getId());
         User user = User.builder()
                 .userId(authenticationRequest.getId())
                 .password(authenticationRequest.getPassword())
+                .refreshToken(tokenData.getRefreshToken())
                 .build();
         userRepository.save(user);
-        return generatedTokenService.execute(authenticationRequest.getId());
+        return tokenData;
     }
 }

@@ -1,10 +1,14 @@
 package com.swma.swma.global.filter;
 
 
+import com.swma.swma.global.security.exception.TokenNotValidException;
 import com.swma.swma.global.security.jwt.TokenProvider;
+import com.swma.swma.global.security.jwt.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -13,16 +17,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
+    private final JwtProperties jwtProperties;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = tokenProvider.resolveToken(request);
-        if (token != null) {
-            Authentication authentication = tokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        String accessToken = request.getHeader("Authorization");
+        if(accessToken != null) {
+            tokenProvider.extractAllClaims(accessToken, jwtProperties.getAccessSecret());
+            if (!tokenProvider.getTokenType(accessToken, jwtProperties.getAccessSecret()).equals("ACCESS_TOKEN"))
+                throw new TokenNotValidException();
+            String email = tokenProvider.getUserEmail(accessToken, jwtProperties.getAccessSecret());
+            registerSecurityContext(request, email);
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void registerSecurityContext(HttpServletRequest request, String email) {
+        UsernamePasswordAuthenticationToken authenticationToken = tokenProvider.authentication(email);
+        // SecurityContextHolder는 보안 주체 세부 정보 응용프로그램의 현재 보안 컨텍스트 에 대한 정보가 저장됨
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }

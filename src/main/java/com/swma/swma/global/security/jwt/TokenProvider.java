@@ -1,68 +1,107 @@
 package com.swma.swma.global.security.jwt;
 
 import com.swma.swma.global.security.auth.AuthDetailsService;
+import com.swma.swma.global.security.exception.TokenExpirationException;
+import com.swma.swma.global.security.exception.TokenNotValidException;
 import com.swma.swma.global.security.jwt.properties.JwtProperties;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.SignatureException;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
+@Getter
 public class TokenProvider {
-    private final JwtProperties jwtProperties;
     private final AuthDetailsService authDetailsService;
+    private final JwtProperties jwtProperties;
+    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 120; // 2시간
+    private final long REFRESH_TOKEN_EXPIRE_TIME = ACCESS_TOKEN_EXPIRE_TIME * 12 * 7; // 일주일
 
-    private String generateToken(String email,String type,String secret,Integer exp){
+    @AllArgsConstructor
+    private enum TokenType {
+        ACCESS_TOKEN("accessToken"),
+        REFRESH_TOKEN("refreshToken");
+        String value;
+    }
+
+    @AllArgsConstructor
+    private enum TokenClaimName {
+        USER_EMAIL("userEmail"),
+        TOKEN_TYPE("tokenType");
+        String value;
+    }
+
+    // 암호화된 키 값 가져오기
+    private Key getSignInKey(String secretKey) {
+        byte[] bytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(bytes);
+    }
+
+    // Token 생성
+    private String generateToken(String userEmail, TokenType tokenType, String secret, long expireTime) {
+        final Claims claims = Jwts.claims();
+        claims.put(TokenClaimName.USER_EMAIL.value, userEmail);
+        claims.put(TokenClaimName.TOKEN_TYPE.value, tokenType);
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(secret.getBytes()))
-                .claim("email",email)
-                .claim("type",type)
-                .setIssuedAt(new Date())
-                .setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + exp * 1000))
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expireTime))
+                .signWith(getSignInKey(secret), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateAccessToken(String userId){
-        return generateToken(userId,"access",jwtProperties.getAccessSecret(),60*15);
-    }
-    public String generateRefreshToken(String userId){
-        return generateToken(userId,"refresh",jwtProperties.getRefreshSecret(),60*60*24*7);
-    }
-    public Authentication getAuthentication(String token){
-        UserDetails userDetails = authDetailsService.loadUserByUsername(getTokenSubject(token,jwtProperties.getAccessSecret()));
-        return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
-    }
-    private Claims getTokenBody(String token, String secret){
-        try{
-            return Jwts.parser()
-                    .setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes()))
+    // 모든 Claims 추출 ( Payload에 들어가는 값은 Claims 이라고 부른다 )
+    public Claims extractAllClaims(String token, String secret) {
+        token = token.replace("Bearer ", "");
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey(secret))
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
-        }catch(ExpiredJwtException e){
-            throw new ExpiredTokenException();
-        }catch(MalformedJwtException | SignatureException e){
-            throw new InvalidTokenException();
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpirationException();
+        } catch (JwtException e) {
+            throw new TokenNotValidException();
         }
+
     }
-    public String resolveToken(HttpServletRequest request){
-        String token = request.getHeader("Authorization");
-        if((token != null) && token.startsWith ("Bearer "))
-            return token.replace ("Bearer ", "");
-        return null;
+
+    public ZonedDateTime getExpiredAtToken(String token, String secret) {
+        return ZonedDateTime.now().plusSeconds(ACCESS_TOKEN_EXPIRE_TIME);
     }
-    private String getTokenSubject(String token,String secret){
-        return getTokenBody(token,secret).get("email",String.class);
+
+    // 토큰 값으로 유저 이메일 조회
+    public String getUserEmail(String token, String secret) {
+        return extractAllClaims(token, secret).get(TokenClaimName.USER_EMAIL.value, String.class);
+    }
+
+    // 토큰 타입 확인
+    public String getTokenType(String token, String secret) {
+        return extractAllClaims(token, secret).get(TokenClaimName.TOKEN_TYPE.value, String.class);
+    }
+
+    // AccessToken 토큰 생성
+    public String generatedAccessToken(String email) {
+        return generateToken(email, TokenType.ACCESS_TOKEN, jwtProperties.getAccessSecret(), ACCESS_TOKEN_EXPIRE_TIME);
+    }
+
+    // RefreshToken 토큰 생성
+    public String generatedRefreshToken(String email) {
+        return generateToken(email, TokenType.REFRESH_TOKEN, jwtProperties.getRefreshSecret(), REFRESH_TOKEN_EXPIRE_TIME);
+    }
+    public UsernamePasswordAuthenticationToken authentication(String userEmail) {
+        UserDetails userDetails = authDetailsService.loadUserByUsername(userEmail);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

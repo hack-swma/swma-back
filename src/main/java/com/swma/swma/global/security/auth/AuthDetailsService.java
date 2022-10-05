@@ -1,6 +1,7 @@
 package com.swma.swma.global.security.auth;
 
 import com.swma.swma.domain.user.repository.UserRepository;
+import com.swma.swma.global.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,6 @@ public class AuthDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         return userRepository.findUserByUserId(userId)
                 .map(AuthDetails::new)
-                .orElseThrow(); //TODO- userNotFound로 변경
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
     }
 }

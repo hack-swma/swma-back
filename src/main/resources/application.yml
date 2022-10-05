@@ -1,0 +1,19 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/swma?serverTimezone=Asia/Seoul
+    username: yoon
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+jwt:
+  accessSecret: TVNHdGVhbXRvb2szJEAjIQ==TVNHdGVhbXRvb2szJEAjIQ==
+  refreshSecret: RGNVNSDJAdDVhbGRvb2HzJEAjIQ==TVNHdGVhbXRvb2szJEAjIQ==
+server:
+  port: 3030

@@ -1,5 +1,6 @@
 package com.swma.swma.domain.account.presentation;
 
+import com.swma.swma.domain.account.presentation.dto.request.CheckIdRequest;
 import com.swma.swma.domain.account.presentation.dto.request.SignUpRequest;
 import com.swma.swma.domain.account.presentation.dto.response.TokenResponse;
 import com.swma.swma.domain.account.service.IdVerityService;
@@ -21,7 +22,7 @@ public class AccountController {
         return new ResponseEntity<>(tokenResponse,HttpStatus.CREATED);
     }
     @RequestMapping(method = RequestMethod.HEAD)
-    public ResponseEntity<Void> idVerify(@PathVariable String userId){
+    public ResponseEntity<Void> idVerify(@RequestParam String userId){
         idVerityService.execute(userId);
         return ResponseEntity.ok().build();
     }
