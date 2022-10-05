@@ -68,7 +68,7 @@ public class User {
     private List<Language> languages;
 
     @Builder
-    public User(String userId, String password, String name, int year, int month, int day, Sex sex, String img, String description, String country, String region, LocalDate certifyDate,List<Language> languages) {
+    public User(String userId, String password, String name, int year, int month, int day, Sex sex, String img, String description, String country, String region, LocalDate certifyDate,List<Language> languages,String refreshToken) {
         this.userId = userId;
         this.password = password;
         this.name = name;
@@ -80,6 +80,7 @@ public class User {
         this.region = region;
         this.certifyDate = certifyDate;
         this.languages = languages;
+        this.refreshToken = refreshToken;
     }
 
 }
