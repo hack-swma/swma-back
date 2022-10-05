@@ -21,18 +21,21 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	public MainPageResponse getUserProfile(Pageable page, Long userId) {
+	public MainPageResponse getUserProfile(Pageable page, String userId) {
 		Page<User> users = userRepository.findAllByOrderByIdDesc(page);
 		return MainPageResponse.builder()
 			.totalPages(users.getTotalPages())
-			.img(userRepository.findById(userId).orElseThrow(() -> UserNotFoundException.EXCEPTION).getImg())
+			.img(userRepository.findUserByUserId(userId).orElseThrow(() -> UserNotFoundException.EXCEPTION).getImg())
 			.userResponses(users.stream().map(this::ofUserResponse).collect(Collectors.toList()))
 			.build();
 	}
 
 	public UserResponse getUser(Long userId) {
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> UserNotFoundException.EXCEPTION);
+		return getUserList(userRepository.findUserById(userId)
+			.orElseThrow(() -> UserNotFoundException.EXCEPTION));
+	}
+
+	public UserResponse getUserList(User user) {
 		LocalDate nowDate = LocalDate.now();
 
 		int age = nowDate.getYear() - user.getDate().getYear() -
@@ -48,6 +51,7 @@ public class UserService {
 		}
 
 		return UserResponse.builder()
+			.id(user.getId())
 			.certifyDate(certifyDate)
 			.age(age)
 			.sex(user.getSex().getSex())
