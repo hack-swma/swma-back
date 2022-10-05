@@ -43,16 +43,9 @@ public class UserService {
 				(user.getDate().getMonth() == nowDate.getMonth() &&
 					user.getDate().getDayOfMonth()<= nowDate.getDayOfMonth())) ? 1 : 0);
 
-		int certifyDate;
-		if(nowDate.getYear()-user.getDate().getYear()!=0) {
-			certifyDate = (365*(nowDate.getYear()-user.getDate().getYear()))+user.getDate().getDayOfYear();
-		} else {
-			certifyDate = nowDate.getDayOfYear()-user.getDate().getDayOfYear();
-		}
-
 		return UserResponse.builder()
 			.id(user.getId())
-			.certifyDate(certifyDate)
+			.certifyDate(user.getCertifyDate())
 			.age(age)
 			.sex(user.getSex().getSex())
 			.country(user.getCountry())
