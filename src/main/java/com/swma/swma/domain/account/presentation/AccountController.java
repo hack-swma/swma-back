@@ -1,6 +1,5 @@
 package com.swma.swma.domain.account.presentation;
 
-import antlr.Token;
 import com.swma.swma.domain.account.presentation.dto.request.SignInRequest;
 import com.swma.swma.domain.account.presentation.dto.request.SignUpRequest;
 import com.swma.swma.domain.account.presentation.dto.response.TokenResponse;
@@ -11,7 +10,14 @@ import com.swma.swma.domain.account.service.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +27,10 @@ public class AccountController {
     private final IdVerityService idVerityService;
     private final SignInService signInService;
     private final RefreshTokenService refreshTokenService;
+
     @PostMapping("/signup")
-    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest authenticationRequest){
-        TokenResponse tokenResponse =  signUpService.execute(authenticationRequest);
+    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request){
+        TokenResponse tokenResponse =  signUpService.execute(request);
         return new ResponseEntity<>(tokenResponse,HttpStatus.CREATED);
     }
     @RequestMapping(method = RequestMethod.HEAD)
