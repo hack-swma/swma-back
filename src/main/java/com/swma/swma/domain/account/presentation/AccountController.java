@@ -1,6 +1,5 @@
 package com.swma.swma.domain.account.presentation;
 
-import com.swma.swma.domain.account.presentation.dto.request.CheckIdRequest;
 import com.swma.swma.domain.account.presentation.dto.request.SignInRequest;
 import com.swma.swma.domain.account.presentation.dto.request.SignUpRequest;
 import com.swma.swma.domain.account.presentation.dto.response.TokenResponse;
