@@ -1,4 +1,4 @@
-package com.swma.swma.domain.user.entity;
+package com.swma.swma.domain.user.entity.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
