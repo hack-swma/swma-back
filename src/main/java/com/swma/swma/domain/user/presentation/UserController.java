@@ -26,4 +26,15 @@ public class UserController {
 		return userService.getUserProfile(page, userId);
 	}
 
+	@GetMapping("/{id}")
+	public UserResponse getUser(@PathVariable("id") Long userId) {
+		return userService.getUser(userId);
+	}
+
+	@GetMapping
+	public UserResponse getMyUser() {
+		Long userId = 1L;
+		return userService.getUser(userId);
+	}
+
 }

@@ -30,6 +30,35 @@ public class UserService {
 			.build();
 	}
 
+	public UserResponse getUser(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> UserNotFoundException.EXCEPTION);
+		LocalDate nowDate = LocalDate.now();
+
+		int age = nowDate.getYear() - user.getDate().getYear() -
+			(!(user.getDate().getMonthValue() < nowDate.getMonthValue() ||
+				(user.getDate().getMonth() == nowDate.getMonth() &&
+					user.getDate().getDayOfMonth()<= nowDate.getDayOfMonth())) ? 1 : 0);
+
+		int certifyDate;
+		if(nowDate.getYear()-user.getDate().getYear()!=0) {
+			certifyDate = (365*(nowDate.getYear()-user.getDate().getYear()))+user.getDate().getDayOfYear();
+		} else {
+			certifyDate = nowDate.getDayOfYear()-user.getDate().getDayOfYear();
+		}
+
+		return UserResponse.builder()
+			.certifyDate(certifyDate)
+			.age(age)
+			.sex(user.getSex().getSex())
+			.country(user.getCountry())
+			.region(user.getRegion())
+			.img(user.getImg())
+			.name(user.getName())
+			.description(user.getDescription())
+			.build();
+	}
+
 	private MainPageResponse.UserResponse ofUserResponse(User user) {
 		return MainPageResponse.UserResponse.builder()
 			.name(user.getName())
