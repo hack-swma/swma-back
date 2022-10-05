@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class AuthenticationRequest {
+public class CheckIdRequest {
     private final String id;
-    private final String password;
 }

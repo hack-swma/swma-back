@@ -34,11 +34,11 @@ public class TokenProvider {
                 .compact();
     }
 
-    public String generateAccessToken(String email){
-        return generateToken(email,"access",jwtProperties.getAccessSecret(),60*15);
+    public String generateAccessToken(String userId){
+        return generateToken(userId,"access",jwtProperties.getAccessSecret(),60*15);
     }
-    public String generateRefreshToken(String email){
-        return generateToken(email,"refresh",jwtProperties.getRefreshSecret(),60*60*24*7);
+    public String generateRefreshToken(String userId){
+        return generateToken(userId,"refresh",jwtProperties.getRefreshSecret(),60*60*24*7);
     }
     public Authentication getAuthentication(String token){
         UserDetails userDetails = authDetailsService.loadUserByUsername(getTokenSubject(token,jwtProperties.getAccessSecret()));
