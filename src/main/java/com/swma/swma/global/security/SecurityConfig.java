@@ -34,7 +34,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,
-                        "/account/signup"
+                        "/account/signup","/account"
                 ).permitAll()
                 .antMatchers(HttpMethod.HEAD,
                         "/account"
