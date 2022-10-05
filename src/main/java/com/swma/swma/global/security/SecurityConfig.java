@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.HEAD,
                         "/account"
                 ).permitAll()
+                .antMatchers(HttpMethod.PATCH, "/account").permitAll()
                 .anyRequest().authenticated();
         http
                 .sessionManagement()
