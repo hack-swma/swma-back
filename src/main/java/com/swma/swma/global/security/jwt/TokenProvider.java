@@ -36,7 +36,7 @@ public class TokenProvider {
 
     @AllArgsConstructor
     private enum TokenClaimName {
-        USER_EMAIL("userEmail"),
+        USER_ID("userEmail"),
         TOKEN_TYPE("tokenType");
         String value;
     }
@@ -50,7 +50,7 @@ public class TokenProvider {
     // Token 생성
     private String generateToken(String userEmail, TokenType tokenType, String secret, long expireTime) {
         final Claims claims = Jwts.claims();
-        claims.put(TokenClaimName.USER_EMAIL.value, userEmail);
+        claims.put(TokenClaimName.USER_ID.value, userEmail);
         claims.put(TokenClaimName.TOKEN_TYPE.value, tokenType);
         return Jwts.builder()
                 .setClaims(claims)
@@ -83,7 +83,7 @@ public class TokenProvider {
 
     // 토큰 값으로 유저 이메일 조회
     public String getUserEmail(String token, String secret) {
-        return extractAllClaims(token, secret).get(TokenClaimName.USER_EMAIL.value, String.class);
+        return extractAllClaims(token, secret).get(TokenClaimName.USER_ID.value, String.class);
     }
 
     // 토큰 타입 확인
