@@ -1,19 +1,14 @@
 package com.swma.swma.domain.user.entity;
 
-
 import java.time.LocalDate;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import com.swma.swma.domain.user.entity.type.Sex;
 
@@ -30,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name="user_id", unique = true, length = 8)
+    @Column(nullable = false, name="user_id", unique = true, length = 30)
     private String userId;
 
     @Column(length = 60, nullable = false)
@@ -90,6 +85,11 @@ public class User {
         this.country = country;
         this.region = region;
         this.certifyDate = LocalDate.now();
+    }
+
+    public int ofAge(LocalDate nowDate) {
+        return nowDate.getYear() - date.getYear() - (!(date.getMonthValue() < nowDate.getMonthValue() ||
+                (date.getMonth() == nowDate.getMonth() && date.getDayOfMonth()<= nowDate.getDayOfMonth())) ? 1 : 0);
     }
 
 }

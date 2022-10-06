@@ -48,7 +48,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<TokenResponse> signin(@RequestBody @Valid SignInRequest signInRequest){
+    public ResponseEntity<TokenResponse> signIn(@RequestBody @Valid SignInRequest signInRequest){
         TokenResponse tokenResponse = signInService.execute(signInRequest);
         return new ResponseEntity<>(tokenResponse,HttpStatus.OK);
     }

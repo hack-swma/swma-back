@@ -28,9 +28,7 @@ import com.swma.swma.domain.user.repository.UserRepository;
 import com.swma.swma.global.exception.UserNotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -40,7 +38,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final UserUtils userUtils;
 
-	public MainPageResponse getMainpage(Pageable page, User user) {
+	public MainPageResponse getMainPage(Pageable page, User user) {
 		Page<User> users = userRepository.findAllByOrderByIdDesc(page);
 		return getUserProfile(users, user);
 	}
@@ -64,25 +62,16 @@ public class UserService {
 	}
 
 	public UserResponse getUserList(User user) {
-		LocalDate nowDate = LocalDate.now();
-
-		int age = nowDate.getYear() - user.getDate().getYear() -
-			(!(user.getDate().getMonthValue() < nowDate.getMonthValue() ||
-				(user.getDate().getMonth() == nowDate.getMonth() &&
-					user.getDate().getDayOfMonth()<= nowDate.getDayOfMonth())) ? 1 : 0);
-
 		return UserResponse.builder()
-				.userId(user.getUserId())
-				.certifyDate(user.getCertifyDate())
-				.age(age)
-				.sex(user.getSex().getSex())
-				.country(user.getCountry())
-				.region(user.getRegion())
-				.img(user.getImg())
-				.name(user.getName())
-				.description(user.getDescription())
-				.avgRevies(getAvgReviews(user.getId()))
-				.reviews(getReviewList(user.getId()))
+			.userId(user.getUserId())
+			.certifyDate(user.getCertifyDate())
+			.age(user.ofAge(LocalDate.now()))
+			.sex(user.getSex().getSex())
+			.country(user.getCountry())
+			.region(user.getRegion())
+			.img(user.getImg())
+			.name(user.getName())
+			.description(user.getDescription())
 			.build();
 	}
 
