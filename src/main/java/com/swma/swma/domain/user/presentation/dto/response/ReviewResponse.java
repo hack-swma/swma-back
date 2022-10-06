@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 public class ReviewResponse {
-    private Long id;
-    private String reviewerImg;
-    private String message;
-    private int star;
-    private Long userId;
+    private final Long id;
+    private final String reviewerImg;
+    private final String message;
+    private final int star;
+    private final Long userId;
 }
