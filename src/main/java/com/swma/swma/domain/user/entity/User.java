@@ -78,8 +78,9 @@ public class User {
         this.refreshToken = refreshToken;
     }
 
-    public void updateRefreshToken(String refreshToken){
+    public User updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
+        return this;
     }
 
     public void update(String name, String description, String img) {
@@ -92,4 +93,6 @@ public class User {
         this.country = country;
         this.region = region;
         this.certifyDate = LocalDate.now();
+    }
+
 }
