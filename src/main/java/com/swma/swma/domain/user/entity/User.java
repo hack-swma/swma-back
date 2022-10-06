@@ -92,6 +92,4 @@ public class User {
         this.country = country;
         this.region = region;
         this.certifyDate = LocalDate.now();
-    }
-
 }
