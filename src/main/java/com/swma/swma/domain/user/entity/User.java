@@ -82,6 +82,12 @@ public class User {
         this.refreshToken = refreshToken;
     }
 
+    public void update(String name, String description, String img) {
+        this.name = name;
+        this.description = description;
+        this.img = img;
+    }
+
     public void updateCountryOrRegion(String country, String region) {
         this.country = country;
         this.region = region;

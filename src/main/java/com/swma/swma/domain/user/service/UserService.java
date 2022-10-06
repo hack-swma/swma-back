@@ -59,8 +59,23 @@ public class UserService {
 	@Transactional
 	public void updateCountryOrRegion(User user, LiveRequest request) {
 		user.updateCountryOrRegion(request.getCountry(), request.getRegion());
-		userRepository.save(user)
+		userRepository.save(user);
 	}
+
+	@Transactional
+	public Long update(User user, UserRequest request) {
+		user.update(request.getName(), request.getDescription(), request.getImg());
+
+		languageRepository.deleteAll(user.getLanguages());
+		List<Language> languages = new ArrayList<>();
+		for(LanguageType languageType : request.getLanguage()) {
+			languages.add(new Language(languageType, user));
+		}
+
+		languageRepository.saveAll(languages);
+		return userRepository.save(user).getId();
+	}
+
 	private MainPageResponse.UserResponse ofUserResponse(User user) {
 		return MainPageResponse.UserResponse.builder()
 			.name(user.getName())
