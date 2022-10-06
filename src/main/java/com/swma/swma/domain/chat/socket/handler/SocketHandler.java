@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -33,14 +34,14 @@ public class SocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage reqMessage) throws Exception {
         String msg = reqMessage.getPayload();
         User userData = userUtils.currentUser();
-        JSONObject obj = jsonToObjectParser(msg);
-        Long rN = (Long) obj.get("id");
+        String id = session.getUri().getPath().replace("/ws/chat/", "");
+        Long rN = Long.parseLong(id);
         for(WebSocketSession sess: list) {
-            /*chatRepository.save(Chat.builder()
+            chatRepository.save(Chat.builder()
                     .chatRoomId(rN)
                     .fromUserId(userData.getId())
                     .message(String.valueOf(reqMessage))
-                    .build());*/
+                    .build());
             sess.sendMessage(reqMessage);
         }
     }
@@ -57,10 +58,11 @@ public class SocketHandler extends TextWebSocketHandler {
     }
     private static JSONObject jsonToObjectParser(String jsonStr){
         JSONParser parser = new JSONParser();
+        System.out.println(jsonStr);
         JSONObject obj = null;
         try {
             obj = (JSONObject) parser.parse(jsonStr);
-        } catch (org.json.simple.parser.ParseException e) {
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
         return obj;

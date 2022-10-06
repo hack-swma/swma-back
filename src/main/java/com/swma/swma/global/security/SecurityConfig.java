@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/account/signup","/account","/image").permitAll()
                 .antMatchers(HttpMethod.HEAD, "/account").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/account").permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
         http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
