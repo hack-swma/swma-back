@@ -9,6 +9,7 @@ import com.swma.swma.global.UserUtils;
 import com.swma.swma.global.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,9 +22,10 @@ public class ChatListService {
     private final UserUtils userUtils;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<ChatListResponse> execute(){
         User user = userUtils.currentUser();
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByFromUserOOrderByLatestDateDesc(user);
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByFromUserOrderByLatestDateDesc(user);
         return getChatRoomUser(chatRoomList);
     }
     private List<ChatListResponse> getChatRoomUser(List<ChatRoom> chatRoomList){

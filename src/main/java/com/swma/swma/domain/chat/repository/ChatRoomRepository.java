@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ChatRoomRepository extends CrudRepository<ChatRoom,Long> {
-    List<ChatRoom> findAllByFromUserOOrderByLatestDateDesc(User user);
+    List<ChatRoom> findAllByFromUserOrderByLatestDateDesc(User user);
 }
