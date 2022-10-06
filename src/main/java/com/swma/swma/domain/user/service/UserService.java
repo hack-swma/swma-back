@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.swma.swma.domain.user.entity.Review;
+import com.swma.swma.domain.user.presentation.dto.request.CreateReviewRequest;
 import com.swma.swma.domain.user.presentation.dto.response.ReviewResponse;
 import com.swma.swma.domain.user.repository.ReviewRepository;
+import com.swma.swma.global.UserUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class UserService {
 	private final LanguageRepository languageRepository;
 	private final ReviewRepository reviewRepository;
 	private final UserRepository userRepository;
+	private final UserUtils userUtils;
 
 	public MainPageResponse getMainpage(Pageable page, User user) {
 		Page<User> users = userRepository.findAllByOrderByIdDesc(page);
@@ -102,6 +105,15 @@ public class UserService {
 		user.update(request.getName(), request.getDescription(), request.getImg());
 		return userRepository.save(user).getId();
 	}
+	public void createReview(CreateReviewRequest createReviewRequest){
+		User user = userUtils.currentUser();
+		reviewRepository.save(Review.builder()
+				.reviewerImg(user.getImg())
+				.userId(createReviewRequest.getUserId())
+				.message(createReviewRequest.getMessage())
+				.star(createReviewRequest.getStar())
+				.build());
+	}
 
 	private List<ReviewResponse> getReviewList(Long userId){
 		List<Review> reviewList = reviewRepository.findByUserId(userId);
@@ -118,11 +130,12 @@ public class UserService {
 		return reviewResponses;
 	}
 	private int getAvgReviews(Long userId){
+		float ret = 0;
 		List<Review> reviewList = reviewRepository.findByUserId(userId);
-		reviewList.forEach(review -> {
-			review.getStar();
-		});
-		return 1;
+		for(Review review:reviewList) {
+			ret+=review.getStar();
+		}
+		return (int) (ret/reviewList.size());
 	}
 	private MainPageResponse.UserResponse ofUserResponse(User user) {
 		return MainPageResponse.UserResponse.builder()
