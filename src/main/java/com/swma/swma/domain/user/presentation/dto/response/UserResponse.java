@@ -18,9 +18,11 @@ public class UserResponse {
 	private final String description;
 	private final String live;
 	private final List<String> languages;
+	private final int avgReviews;
+	private final List<ReviewResponse> reviews;
 
 	@Builder
-	public UserResponse(String userId, LocalDate certifyDate, String img, String name, String sex, int age, String description, String country, String region, List<String> languages) {
+	public UserResponse(String userId, LocalDate certifyDate, String img, String name, String sex, int age, String description, String country, String region, List<String> languages, int avgRevies, List<ReviewResponse> reviews) {
 		this.userId = userId;
 		this.certifyDate = certifyDate;
 		this.img = img;
@@ -28,8 +30,9 @@ public class UserResponse {
 		this.sex = sex;
 		this.age = age;
 		this.description = description;
+		this.avgReviews = avgRevies;
+		this.reviews = reviews;
 		this.live = country+", "+region;
 		this.languages = languages;
 	}
-
 }
