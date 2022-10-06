@@ -43,6 +43,9 @@ public class UserController {
 	public UserResponse getMyUser() {
 		return userService.getUserList(userUtils.currentUser());
 		return userService.getUser(userId);
+	@PatchMapping("/ip")
+	public void updateCountryOrRegion(@RequestBody @Valid LiveRequest request) {
+		userService.updateCountryOrRegion(userUtils.currentUser(), request);
 	}
 
 }

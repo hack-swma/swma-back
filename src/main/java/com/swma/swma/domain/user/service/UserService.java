@@ -56,6 +56,11 @@ public class UserService {
 			.build();
 	}
 
+	@Transactional
+	public void updateCountryOrRegion(User user, LiveRequest request) {
+		user.updateCountryOrRegion(request.getCountry(), request.getRegion());
+		userRepository.save(user)
+	}
 	private MainPageResponse.UserResponse ofUserResponse(User user) {
 		return MainPageResponse.UserResponse.builder()
 			.name(user.getName())

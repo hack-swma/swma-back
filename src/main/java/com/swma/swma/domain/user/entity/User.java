@@ -82,6 +82,10 @@ public class User {
         this.refreshToken = refreshToken;
     }
 
+    public void updateCountryOrRegion(String country, String region) {
+        this.country = country;
+        this.region = region;
+        this.certifyDate = LocalDate.now();
     }
 
 }
