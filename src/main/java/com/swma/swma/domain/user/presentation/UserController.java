@@ -33,7 +33,7 @@ public class UserController {
 
 	@GetMapping("/main")
 	public MainPageResponse getMain(@PageableDefault Pageable page) {
-		return userService.getUserProfile(page, userUtils.currentUserId());
+		return userService.getMainpage(page, userUtils.currentUser());
 	}
 
 	@GetMapping("/{id}")
@@ -44,7 +44,8 @@ public class UserController {
 	@GetMapping
 	public UserResponse getMyUser() {
 		return userService.getUserList(userUtils.currentUser());
-		return userService.getUser(userId);
+	}
+
 	@PatchMapping("/ip")
 	public void updateCountryOrRegion(@RequestBody @Valid LiveRequest request) {
 		userService.updateCountryOrRegion(userUtils.currentUser(), request);
@@ -54,4 +55,10 @@ public class UserController {
 	public void updateUser(@RequestBody @Valid UserRequest request) {
 		userService.update(userUtils.currentUser(), request);
 	}
+
+	@GetMapping("/search")
+	public MainPageResponse userSearchCountry(@PageableDefault Pageable page, @RequestParam("country")String country) {
+		return userService.userSearchCountry(page, country, userUtils.currentUser());
+	}
+
 }
