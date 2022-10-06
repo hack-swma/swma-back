@@ -22,7 +22,9 @@ import com.swma.swma.domain.user.repository.UserRepository;
 import com.swma.swma.global.exception.UserNotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -82,15 +84,15 @@ public class UserService {
 
 	@Transactional
 	public Long update(User user, UserRequest request) {
-		user.update(request.getName(), request.getDescription(), request.getImg());
 
-		languageRepository.deleteAll(user.getLanguages());
+		languageRepository.deleteAll(languageRepository.findAllByUserId(user.getId()));
+
 		List<Language> languages = new ArrayList<>();
 		for(LanguageType languageType : request.getLanguage()) {
 			languages.add(new Language(languageType, user));
 		}
-
 		languageRepository.saveAll(languages);
+		user.update(request.getName(), request.getDescription(), request.getImg());
 		return userRepository.save(user).getId();
 	}
 

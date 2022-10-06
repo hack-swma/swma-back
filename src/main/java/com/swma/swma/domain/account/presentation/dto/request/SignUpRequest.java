@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.swma.swma.domain.user.entity.Language;
 import com.swma.swma.domain.user.entity.type.LanguageType;
 import com.swma.swma.domain.user.entity.type.Sex;
 import com.swma.swma.global.exception.DateBadRequestException;
@@ -46,7 +45,6 @@ public class SignUpRequest {
     @Size(min = 20, max = 500, message = "자기소개를 입력해주세요")
     private final String description;
 
-    @NotBlank
     private final List<LanguageType> language;
 
     @NotBlank
