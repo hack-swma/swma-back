@@ -29,5 +29,17 @@ public class PostService {
 				.endDate(request.getEndDate())
 			.build()).getId();
 	}
-	
+
+	@Transactional
+	public Long updatePost(Long postId, PostRequest request) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> PostNotFoundException.EXCEPTION);
+
+		if(!post.getUser().getUserId().equals(userUtils.currentUserId())) throw PostForbiddenException.EXCEPTION;
+
+		post.update(request.getTitle(), request.getContent(), request.getMember(), request.getStartDate(), request.getEndDate());
+
+		return postRepository.save(post).getId();
+	}
+
 }

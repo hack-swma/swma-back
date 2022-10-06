@@ -14,6 +14,7 @@ public enum ErrorCode {
 	DATE_BAD_REQUEST(400, "생년월일을 잘못 입력했습니다."),
 	FAIL_TO_UPLOAD(500,"사진 업로드에 실패했습니다."),
 	POST_NOT_FOUND(404, "게시글을 찾을 수 없습니다."),
+	POST_FORDIDDEN(409, "게시글을 수정/삭제할 권한이 없습니다.");
 
 	private final int status;
 	private final String message;

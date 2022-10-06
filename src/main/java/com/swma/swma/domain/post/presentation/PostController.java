@@ -29,4 +29,9 @@ public class PostController {
 		return postService.savePost(request);
 	}
 
+	@PatchMapping("/{id}")
+	public Long updatePost(@PathVariable("id") Long postId, @RequestBody @Valid PostRequest request) {
+		return postService.updatePost(postId, request);
+	}
+
 }
