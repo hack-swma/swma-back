@@ -1,5 +1,7 @@
 package com.swma.swma.domain.account.presentation;
 
+import javax.validation.Valid;
+
 import com.swma.swma.domain.account.presentation.dto.request.SignInRequest;
 import com.swma.swma.domain.account.presentation.dto.request.SignUpRequest;
 import com.swma.swma.domain.account.presentation.dto.response.TokenResponse;
@@ -8,7 +10,6 @@ import com.swma.swma.domain.account.service.LogoutService;
 import com.swma.swma.domain.account.service.RefreshTokenService;
 import com.swma.swma.domain.account.service.SignInService;
 import com.swma.swma.domain.account.service.SignUpService;
-import com.swma.swma.global.UserUtils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("account")
+@RequestMapping("/account")
 public class AccountController {
     private final SignUpService signUpService;
     private final IdVerityService idVerityService;
@@ -35,19 +36,19 @@ public class AccountController {
     private final LogoutService logoutService;
 
     @PostMapping("/signup")
-    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest request){
+    public ResponseEntity<TokenResponse> signUp(@RequestBody @Valid SignUpRequest request){
         TokenResponse tokenResponse =  signUpService.execute(request);
         return new ResponseEntity<>(tokenResponse,HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.HEAD)
-    public ResponseEntity<Void> idVerify(@RequestParam String userId){
+    public ResponseEntity<Void> idVerify(@RequestParam("id") String userId){
         idVerityService.execute(userId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping
-    public ResponseEntity<TokenResponse> signin(@RequestBody SignInRequest signInRequest){
+    public ResponseEntity<TokenResponse> signin(@RequestBody @Valid SignInRequest signInRequest){
         TokenResponse tokenResponse = signInService.execute(signInRequest);
         return new ResponseEntity<>(tokenResponse,HttpStatus.OK);
     }
@@ -58,7 +59,7 @@ public class AccountController {
         return new ResponseEntity<>(tokenData, HttpStatus.OK);
     }
 
-    @DeleteMapping("/logout")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout() {
         logoutService.execute();

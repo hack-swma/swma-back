@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swma.swma.domain.user.presentation.dto.request.UserRequest;
@@ -47,13 +49,14 @@ public class UserController {
 	}
 
 	@PatchMapping("/ip")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updateCountryOrRegion(@RequestBody @Valid LiveRequest request) {
 		userService.updateCountryOrRegion(userUtils.currentUser(), request);
 	}
 
 	@PatchMapping
-	public void updateUser(@RequestBody @Valid UserRequest request) {
-		userService.update(userUtils.currentUser(), request);
+	public Long updateUser(@RequestBody @Valid UserRequest request) {
+		return userService.update(userUtils.currentUser(), request);
 	}
 
 	@GetMapping("/search")

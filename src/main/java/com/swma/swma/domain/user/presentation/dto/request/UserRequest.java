@@ -7,13 +7,15 @@ import javax.validation.constraints.Size;
 
 import com.swma.swma.domain.user.entity.type.LanguageType;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class UserRequest {
 
     @NotBlank
-    @Size(min = 8, max = 20)
+    @Size(min = 2, max = 20)
     private String name;
 
     @NotBlank
@@ -23,7 +25,6 @@ public class UserRequest {
     @Size(min = 20, max = 500)
     private String description;
 
-    @NotBlank
     private List<LanguageType> language;
 
 }

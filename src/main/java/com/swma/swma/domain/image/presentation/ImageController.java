@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("image")
+@RequestMapping("/image")
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageUploadService imageUploadService;

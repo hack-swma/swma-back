@@ -11,6 +11,7 @@ import com.swma.swma.domain.account.utils.GeneratedToken;
 import com.swma.swma.domain.user.entity.Language;
 import com.swma.swma.domain.user.entity.User;
 import com.swma.swma.domain.user.entity.type.LanguageType;
+import com.swma.swma.domain.user.entity.type.Sex;
 import com.swma.swma.domain.user.repository.LanguageRepository;
 import com.swma.swma.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

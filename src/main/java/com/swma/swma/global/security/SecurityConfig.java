@@ -33,12 +33,8 @@ public class SecurityConfig {
                 .cors().disable();
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,
-                        "/account/signup","/account","/image"
-                ).permitAll()
-                .antMatchers(HttpMethod.HEAD,
-                        "/account"
-                ).permitAll()
+                .antMatchers(HttpMethod.POST, "/account/signup","/account","/image").permitAll()
+                .antMatchers(HttpMethod.HEAD, "/account").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/account").permitAll()
                 .anyRequest().permitAll();
         http
