@@ -36,6 +36,7 @@ public class SignUpRequest {
     @NotBlank(message = "성별을 입력해주세요")
     private Sex sex;
 
+    @NotBlank
     private String img;
 
     @NotBlank
