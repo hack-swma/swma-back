@@ -36,7 +36,7 @@ public class User {
     @Column(length = 60, nullable = false)
     private String password;
 
-    @Column(length = 20) // nullable = false로 변경
+    @Column(length = 20, nullable = false)
     private String name;
 
     private LocalDate date; // 생년월일
@@ -44,10 +44,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Sex sex;
 
-    @Column() // nullable = false로 변경
+    @Column(nullable = false)
     private String img;
 
-    @Column(length = 500) // nullable = false로 변경
+    @Column(length = 500, nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -60,27 +60,36 @@ public class User {
 
     private String refreshToken;
 
-    public void updateRefreshToken(String refreshToken){
-        this.refreshToken = refreshToken;
-    }
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
     private List<Language> languages;
 
     @Builder
-    public User(String userId, String password, String name, int year, int month, int day, Sex sex, String img, String description, String country, String region, LocalDate certifyDate,List<Language> languages,String refreshToken) {
+    public User(String userId, String password, String name, LocalDate date, Sex sex, String img, String description, String country, String region, String refreshToken) {
         this.userId = userId;
         this.password = password;
         this.name = name;
-        this.date = LocalDate.of(year, month, day);
+        this.date = date;
         this.sex = sex;
         this.img = img;
         this.description = description;
         this.country = country;
         this.region = region;
-        this.certifyDate = certifyDate;
-        this.languages = languages;
+        this.certifyDate = LocalDate.now();
         this.refreshToken = refreshToken;
     }
 
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+
+    public void update(String name, String description, String img) {
+        this.name = name;
+        this.description = description;
+        this.img = img;
+    }
+
+    public void updateCountryOrRegion(String country, String region) {
+        this.country = country;
+        this.region = region;
+        this.certifyDate = LocalDate.now();
 }

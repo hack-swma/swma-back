@@ -3,6 +3,7 @@ package com.swma.swma.global;
 import com.swma.swma.domain.user.entity.User;
 import com.swma.swma.domain.user.repository.UserRepository;
 import com.swma.swma.global.exception.UserNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -12,8 +13,12 @@ import org.springframework.stereotype.Component;
 public class UserUtils {
     private final UserRepository userRepository;
 
+    public String currentUserId(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     public User currentUser(){
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findUserByUserId(userId).orElseThrow(()-> new UserNotFoundException());
+        return userRepository.findUserByUserId(currentUserId())
+            .orElseThrow(() -> UserNotFoundException.EXCEPTION);
     }
 }
