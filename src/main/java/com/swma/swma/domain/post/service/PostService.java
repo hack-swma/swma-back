@@ -58,4 +58,44 @@ public class PostService {
 		postRepository.delete(post);
 	}
 
+	public MainPageResponse getMainPage(Pageable page) {
+		Page<Post> post = postRepository.findAllByOrderByIdDesc(page);
+
+		return MainPageResponse.builder()
+			.totalPages(post.getTotalPages())
+			.img(userUtils.currentUser().getImg())
+			.postResponses(post.stream().map(this::ofMainPageResponse).collect(Collectors.toList()))
+			.build();
+	}
+
+	public PostResponse getPost(Long postId) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> PostNotFoundException.EXCEPTION);
+		return PostResponse.builder()
+			.name(post.getUser().getName())
+			.img(post.getUser().getImg())
+			.id(post.getUser().getId())
+			.country(post.getUser().getCountry())
+			.region(post.getUser().getRegion())
+			.startDate(post.getStartDate())
+			.endDate(post.getEndDate())
+			.title(post.getTitle())
+			.member(post.getMember())
+			.content(post.getContent())
+			.build();
+	}
+
+	private MainPageResponse.PostResponse ofMainPageResponse(Post post) {
+		return MainPageResponse.PostResponse.builder()
+			.postId(post.getId())
+			.title(post.getTitle())
+			.startDate(post.getStartDate())
+			.endDate(post.getEndDate())
+			.country(post.getUser().getCountry())
+			.name(post.getUser().getName())
+			.img(post.getUser().getImg())
+			.member(post.getMember())
+			.build();
+	}
+
 }

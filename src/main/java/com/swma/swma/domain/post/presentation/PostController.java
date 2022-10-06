@@ -46,4 +46,14 @@ public class PostController {
 		postService.deletePost(postId);
 	}
 
+	@GetMapping("/main")
+	public MainPageResponse getMain(@PageableDefault Pageable page) {
+		return postService.getMainPage(page);
+	}
+
+	@GetMapping("/{id}")
+	public PostResponse getPost(@PathVariable("id") Long postId) {
+		return postService.getPost(postId);
+	}
+
 }
