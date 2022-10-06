@@ -9,7 +9,6 @@ import com.swma.swma.global.UserUtils;
 import com.swma.swma.global.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,20 +16,20 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChatListService {
-    private final ChatRoomRepository chatRoomRepository;
+public class SearchConversationListService {
     private final UserUtils userUtils;
+    private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
-    public List<ChatListResponse> execute(){
+    public List<ChatListResponse> execute(String name){
         User user = userUtils.currentUser();
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByFromUserOrderByLatestDateDesc(user);
-        return getChatRoomUser(chatRoomList);
+        return searchChatList(chatRoomList,name);
     }
-    private List<ChatListResponse> getChatRoomUser(List<ChatRoom> chatRoomList){
+    private List<ChatListResponse> searchChatList(List<ChatRoom> chatRoomList,String name){
         List<ChatListResponse> chatListResponses  = new ArrayList<>();
-        chatRoomList.forEach(chatRoom -> {
+        List<User> userList = userRepository.findUserByNameContaining(name);
+        chatRoomList.stream().filter(chatRoom -> userList.stream().filter(user -> user.getId()==chatRoom.getToUserId()).isParallel()).map(chatRoom -> {
             User user = userRepository.findById(chatRoom.getToUserId()).orElseThrow(()-> UserNotFoundException.EXCEPTION);
             LocalDate nowDate = LocalDate.now();
             int certifyDate;
@@ -44,7 +43,8 @@ public class ChatListService {
                     .userName(user.getName())
                     .latestDate(chatRoom.getLatestDate())
                     .certifyDate(certifyDate)
-                    .build());
+                    .build());;
+            return chatListResponses;
         });
         return chatListResponses;
     }

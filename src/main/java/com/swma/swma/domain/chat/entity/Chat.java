@@ -1,8 +1,6 @@
 package com.swma.swma.domain.chat.entity;
 
 import lombok.*;
-import org.joda.time.LocalDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
