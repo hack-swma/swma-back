@@ -13,6 +13,7 @@ public enum ErrorCode {
 	USER_ALREADY_EXIST(409,"유저가 이미 존재합니다."),
 	DATE_BAD_REQUEST(400, "생년월일을 잘못 입력했습니다.");
 
+	FAIL_TO_UPLOAD(500,"사진 업로드에 실패했습니다.");
 	private final int status;
 	private final String message;
 
