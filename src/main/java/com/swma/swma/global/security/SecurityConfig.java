@@ -40,7 +40,7 @@ public class SecurityConfig {
                         "/account"
                 ).permitAll()
                 .antMatchers(HttpMethod.PATCH, "/account").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
         http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
