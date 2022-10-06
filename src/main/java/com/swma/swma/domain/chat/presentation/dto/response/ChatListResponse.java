@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.LocalDateTime;
 
+import java.time.LocalDate;
+
 @Getter
 @Builder
 @RequiredArgsConstructor
@@ -12,5 +14,5 @@ public class ChatListResponse {
     private final String userImg;
     private final String userName;
     private final LocalDateTime latestDate;
-    private final int certifyDate;
+    private final LocalDate certifyDate;
 }
