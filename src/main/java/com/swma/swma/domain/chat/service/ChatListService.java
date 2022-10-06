@@ -32,18 +32,11 @@ public class ChatListService {
         List<ChatListResponse> chatListResponses  = new ArrayList<>();
         chatRoomList.forEach(chatRoom -> {
             User user = userRepository.findById(chatRoom.getToUserId()).orElseThrow(()-> UserNotFoundException.EXCEPTION);
-            LocalDate nowDate = LocalDate.now();
-            int certifyDate;
-            if(nowDate.getYear()-user.getDate().getYear()!=0) {
-                certifyDate = (365*(nowDate.getYear()-user.getDate().getYear()))+user.getDate().getDayOfYear();
-            } else {
-                certifyDate = nowDate.getDayOfYear()-user.getDate().getDayOfYear();
-            }
             chatListResponses.add(ChatListResponse.builder()
                     .userImg(user.getImg())
                     .userName(user.getName())
                     .latestDate(chatRoom.getLatestDate())
-                    .certifyDate(certifyDate)
+                    .certifyDate(user.getCertifyDate())
                     .build());
         });
         return chatListResponses;
