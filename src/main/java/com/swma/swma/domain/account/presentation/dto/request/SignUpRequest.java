@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.swma.swma.domain.user.entity.Language;
 import com.swma.swma.domain.user.entity.type.LanguageType;
 import com.swma.swma.domain.user.entity.type.Sex;
 import com.swma.swma.global.exception.DateBadRequestException;
@@ -18,39 +19,41 @@ import com.swma.swma.global.exception.DateBadRequestException;
 @RequiredArgsConstructor
 public class SignUpRequest {
 
-    @NotBlank(message = "이메일(필수)")
+    @NotBlank(message = "아이디를 입력해주세요")
+    @Size(max = 8, min = 2)
     private final String id;
+
     @NotBlank(message = "비밀번호(필수)")
-    @Pattern(regexp="(?=.*\\W)(?=\\S+$).{8,40}",
-            message = "비밀번호에 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 40자의 비밀번호여야 합니다.")
+    @Pattern(regexp="(?=.*\\W)(?=\\S+$).{8,20}",
+            message = "비밀번호에 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
     private final String password;
 
     @NotBlank
-    @Size(min = 8, max = 20)
-    private String name;
+    @Size(min = 2, max = 20)
+    private final String name;
 
-    private int year;
-    private int month;
-    private int day;
+    private final int year;
+    private final int month;
+    private final int day;
 
     @NotBlank(message = "성별을 입력해주세요")
-    private Sex sex;
+    private final Sex sex;
+
+    @NotBlank(message = "프로필 사진을 업로드해주세요")
+    private final String img;
 
     @NotBlank
-    private String img;
+    @Size(min = 20, max = 500, message = "자기소개를 입력해주세요")
+    private final String description;
 
     @NotBlank
-    @Size(min = 20, max = 500)
-    private String description;
+    private final List<LanguageType> language;
 
     @NotBlank
-    private List<LanguageType> language;
+    private final String country;
 
     @NotBlank
-    private String country;
-
-    @NotBlank
-    private String region;
+    private final String region;
 
     public LocalDate validDate() {
         LocalDate date = LocalDate.of(year, month, day);
