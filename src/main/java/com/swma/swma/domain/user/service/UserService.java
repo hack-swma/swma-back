@@ -36,7 +36,7 @@ public class UserService {
 	}
 
 	public MainPageResponse userSearchCountry(Pageable page, String country, User user) {
-		Page<User> users = userRepository.findAllByCountryOrderByIdDesc(country, page)
+		Page<User> users = userRepository.findAllByCountryOrderByIdDesc(country, page);
 		return getUserProfile(users,user);
 	}
 
