@@ -32,7 +32,7 @@ public class UserService {
 	private final LanguageRepository languageRepository;
 	private final UserRepository userRepository;
 
-	public MainPageResponse getMainpage(Pageable page, User user) {
+	public MainPageResponse getMainPage(Pageable page, User user) {
 		Page<User> users = userRepository.findAllByOrderByIdDesc(page);
 		return getUserProfile(users, user);
 	}
@@ -56,17 +56,10 @@ public class UserService {
 	}
 
 	public UserResponse getUserList(User user) {
-		LocalDate nowDate = LocalDate.now();
-
-		int age = nowDate.getYear() - user.getDate().getYear() -
-			(!(user.getDate().getMonthValue() < nowDate.getMonthValue() ||
-				(user.getDate().getMonth() == nowDate.getMonth() &&
-					user.getDate().getDayOfMonth()<= nowDate.getDayOfMonth())) ? 1 : 0);
-
 		return UserResponse.builder()
 			.userId(user.getUserId())
 			.certifyDate(user.getCertifyDate())
-			.age(age)
+			.age(user.ofAge(LocalDate.now()))
 			.sex(user.getSex().getSex())
 			.country(user.getCountry())
 			.region(user.getRegion())

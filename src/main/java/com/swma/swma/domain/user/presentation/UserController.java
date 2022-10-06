@@ -35,7 +35,7 @@ public class UserController {
 
 	@GetMapping("/main")
 	public MainPageResponse getMain(@PageableDefault Pageable page) {
-		return userService.getMainpage(page, userUtils.currentUser());
+		return userService.getMainPage(page, userUtils.currentUser());
 	}
 
 	@GetMapping("/{id}")

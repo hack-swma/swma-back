@@ -19,7 +19,7 @@ import com.swma.swma.global.exception.DateBadRequestException;
 public class SignUpRequest {
 
     @NotBlank(message = "아이디를 입력해주세요")
-    @Size(max = 8, min = 2)
+    @Size(max = 30, min = 2)
     private final String id;
 
     @NotBlank(message = "비밀번호(필수)")
@@ -35,7 +35,6 @@ public class SignUpRequest {
     private final int month;
     private final int day;
 
-    @NotBlank(message = "성별을 입력해주세요")
     private final Sex sex;
 
     @NotBlank(message = "프로필 사진을 업로드해주세요")
