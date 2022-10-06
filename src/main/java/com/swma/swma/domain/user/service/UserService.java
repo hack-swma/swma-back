@@ -105,6 +105,7 @@ public class UserService {
 		user.update(request.getName(), request.getDescription(), request.getImg());
 		return userRepository.save(user).getId();
 	}
+	@Transactional
 	public void createReview(CreateReviewRequest createReviewRequest){
 		User user = userUtils.currentUser();
 		reviewRepository.save(Review.builder()
