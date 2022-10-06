@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.swma.swma.domain.user.entity.Review;
 import com.swma.swma.domain.user.presentation.dto.response.ReviewResponse;
@@ -77,6 +78,7 @@ public class UserService {
 				.img(user.getImg())
 				.name(user.getName())
 				.description(user.getDescription())
+				.avgRevies(getAvgReviews(user.getId()))
 				.reviews(getReviewList(user.getId()))
 			.build();
 	}
@@ -114,6 +116,13 @@ public class UserService {
 					.build());
 		});
 		return reviewResponses;
+	}
+	private int getAvgReviews(Long userId){
+		List<Review> reviewList = reviewRepository.findByUserId(userId);
+		reviewList.forEach(review -> {
+			review.getStar();
+		});
+		return 1;
 	}
 	private MainPageResponse.UserResponse ofUserResponse(User user) {
 		return MainPageResponse.UserResponse.builder()
