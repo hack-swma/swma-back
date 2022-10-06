@@ -62,7 +62,7 @@ public class UserService {
 					user.getDate().getDayOfMonth()<= nowDate.getDayOfMonth())) ? 1 : 0);
 
 		return UserResponse.builder()
-			.id(user.getId())
+			.userId(user.getUserId())
 			.certifyDate(user.getCertifyDate())
 			.age(age)
 			.sex(user.getSex().getSex())

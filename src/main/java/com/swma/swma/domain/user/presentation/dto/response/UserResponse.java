@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class UserResponse {
 
-	private final Long id;
+	private final String userId;
 	private final LocalDate certifyDate;
 	private final String img;
 	private final String name;
@@ -18,8 +18,8 @@ public class UserResponse {
 	private final String live;
 
 	@Builder
-	public UserResponse(Long id, LocalDate certifyDate, String img, String name, String sex, int age, String description, String country, String region) {
-		this.id = id;
+	public UserResponse(String userId, LocalDate certifyDate, String img, String name, String sex, int age, String description, String country, String region) {
+		this.userId = userId;
 		this.certifyDate = certifyDate;
 		this.img = img;
 		this.name = name;
